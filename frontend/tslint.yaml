@@ -1,0 +1,22 @@
+defaultSeverity: error
+extends:
+  - tslint:latest
+  - tslint-react
+  - tslint-react-hooks
+rules:
+  quotemark:
+    options: single
+  trailing-comma:
+    options:
+      multiline: always
+      singleline: never
+  eofline: true
+  ordered-imports: false
+  no-default-export: true
+  max-line-length:
+    options:
+      limit: 100
+  indent:
+    options: spaces
+  jsx-space-before-trailing-slash: true
+  jsx-self-close: true
