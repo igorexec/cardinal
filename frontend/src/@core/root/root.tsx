@@ -6,9 +6,9 @@ import {Dashboard, PageSpeed} from '@pages';
 
 export const Root: React.FC = () => {
   const navItems = [{
-    id: '1', link: '/pagespeed', title: 'PageSpeed',
+    id: '1', link: '/', title: 'Dashboard',
   }, {
-    id: '2', link: '/crawl', title: 'Crawl Issues',
+    id: '2', link: '/pagespeed', title: 'PageSpeed',
   }];
 
   return (
