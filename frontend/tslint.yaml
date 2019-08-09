@@ -18,5 +18,8 @@ rules:
       limit: 100
   indent:
     options: spaces
+  interface-name: false
+  arrow-parens: false
+  no-implicit-dependencies: false
   jsx-space-before-trailing-slash: true
   jsx-self-close: true

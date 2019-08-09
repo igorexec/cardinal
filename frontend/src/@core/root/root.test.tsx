@@ -1,15 +1,15 @@
 import React from 'react';
 import {shallow, ShallowWrapper} from 'enzyme';
-import {App} from './App';
+import {Root} from './root';
 
-describe('App', () => {
+describe('Root', () => {
   let wrapper: ShallowWrapper;
 
   beforeAll(() => {
-    wrapper = shallow(<App />);
+    wrapper = shallow(<Root />);
   });
 
-  it('matches snapshot without props', () => {
+  it('matches snapshot', () => {
     expect(wrapper).toMatchSnapshot();
   });
 });

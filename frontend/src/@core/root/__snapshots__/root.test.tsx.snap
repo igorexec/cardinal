@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Root matches snapshot 1`] = `
+<Fragment>
+  <Header
+    navItems={
+      Array [
+        Object {
+          "id": "1",
+          "link": "/pagespeed",
+          "title": "PageSpeed",
+        },
+        Object {
+          "id": "2",
+          "link": "/crawl",
+          "title": "Crawl Issues",
+        },
+      ]
+    }
+  />
+  <Content />
+  <Footer />
+</Fragment>
+`;
