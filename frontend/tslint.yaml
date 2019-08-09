@@ -5,7 +5,9 @@ extends:
   - tslint-react-hooks
 rules:
   quotemark:
-    options: single
+    options:
+      - single
+      - jsx-double
   trailing-comma:
     options:
       multiline: always
@@ -23,3 +25,6 @@ rules:
   no-implicit-dependencies: false
   jsx-space-before-trailing-slash: true
   jsx-self-close: true
+  jsx-boolean-value:
+    options:
+      - never

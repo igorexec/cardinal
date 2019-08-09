@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Root matches snapshot 1`] = `
-<Fragment>
+<BrowserRouter>
   <Header
     navItems={
       Array [
@@ -18,7 +18,20 @@ exports[`Root matches snapshot 1`] = `
       ]
     }
   />
-  <Content />
+  <Switch>
+    <Route
+      component={[Function]}
+      exact={true}
+      path="/"
+    />
+    <Route
+      component={[Function]}
+      path="/pagespeed"
+    />
+    <Redirect
+      to="/"
+    />
+  </Switch>
   <Footer />
-</Fragment>
+</BrowserRouter>
 `;
