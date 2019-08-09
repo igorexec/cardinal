@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Header matches snapshot 1`] = `
+<header>
+  <Navigation
+    items={
+      Array [
+        Object {
+          "id": "1",
+          "link": "link",
+          "title": "title",
+        },
+      ]
+    }
+  />
+</header>
+`;
