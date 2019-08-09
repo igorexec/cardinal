@@ -1,7 +1,8 @@
 import React from 'react';
+import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 import {Header} from '@core/header';
-import {Content} from '@core/content';
 import {Footer} from '@core/footer';
+import {Dashboard, PageSpeed} from '@pages';
 
 export const Root: React.FC = () => {
   const navItems = [{
@@ -11,10 +12,14 @@ export const Root: React.FC = () => {
   }];
 
   return (
-    <>
+    <BrowserRouter>
       <Header navItems={navItems} />
-      <Content />
+      <Switch>
+        <Route exact path="/" component={Dashboard} />
+        <Route path="/pagespeed" component={PageSpeed} />
+        <Redirect to="/" />
+      </Switch>
       <Footer />
-    </>
+    </BrowserRouter>
   );
 };
