@@ -23,6 +23,8 @@ rules:
   interface-name: false
   arrow-parens: false
   no-implicit-dependencies: false
+  member-access:
+    options: no-public
   jsx-space-before-trailing-slash: true
   jsx-self-close: true
   jsx-boolean-value:
