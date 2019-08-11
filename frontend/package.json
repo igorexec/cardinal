@@ -13,7 +13,7 @@
     "@types/react-router-dom": "4.3.4",
     "@types/react-transition-group": "4.2.2",
     "@types/styled-components": "4.1.18",
-    "d3": "5.9.7",
+    "d3": "^5.9.7",
     "enzyme": "3.10.0",
     "enzyme-adapter-react-16": "1.14.0",
     "enzyme-to-json": "3.4.0",
