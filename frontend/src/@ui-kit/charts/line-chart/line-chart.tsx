@@ -27,6 +27,16 @@ export class LineChart extends Component {
 
     d3.select(this.el.current).append('g').attr('transform', `translate(30, 310)`).call(makeXLines);
     d3.select(this.el.current).append('g').attr('transform', 'translate(30, 10)').call(makeYLines);
+
+    const line = d3.line<Score>().x(d => xScale(d.date)).y(d => yScale(d.score));
+    d3.select(this.el.current)
+      .append('path')
+      .datum(data)
+      .attr('transform', 'translate(30, 10)')
+      .attr('fill', 'none')
+      .attr('stroke', 'black')
+      .attr('stroke-width', '3')
+      .attr('d', line);
   }
 
   render() {
