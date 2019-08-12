@@ -35,7 +35,7 @@ export class LineChart extends Component {
       .attr('transform', 'translate(30, 10)')
       .attr('fill', 'none')
       .attr('stroke', 'black')
-      .attr('stroke-width', '3')
+      .attr('stroke-width', '1')
       .attr('d', line);
   }
 
