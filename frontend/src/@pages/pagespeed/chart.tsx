@@ -9,22 +9,22 @@ interface Props {
 export const PageSpeedChart: React.FC<Props> = ({title}) => {
   const lines = [{
     data: [
-      {score: 0, date: new Date('2019-08-11T00:00:00.000')},
-      {score: 100, date: new Date('2019-08-12T00:00:00.000')},
-      {score: 0, date: new Date('2019-08-13T00:00:00.000')},
-      {score: 100, date: new Date('2019-08-14T00:00:00.000')},
-      {score: 0, date: new Date('2019-08-15T00:00:00.000')},
-      {score: 100, date: new Date('2019-08-16T00:00:00.000')},
+      {y: 0, x: new Date('2019-08-11T00:00:00.000')},
+      {y: 100, x: new Date('2019-08-12T00:00:00.000')},
+      {y: 0, x: new Date('2019-08-13T00:00:00.000')},
+      {y: 100, x: new Date('2019-08-14T00:00:00.000')},
+      {y: 0, x: new Date('2019-08-15T00:00:00.000')},
+      {y: 100, x: new Date('2019-08-16T00:00:00.000')},
     ],
     name: 'www.toryburch.com',
   }, {
     data: [
-      {score: 33, date: new Date('2019-08-11T00:00:00.000')},
-      {score: 71, date: new Date('2019-08-12T00:00:00.000')},
-      {score: 54, date: new Date('2019-08-13T00:00:00.000')},
-      {score: 81, date: new Date('2019-08-14T00:00:00.000')},
-      {score: 13, date: new Date('2019-08-15T00:00:00.000')},
-      {score: 77, date: new Date('2019-08-16T00:00:00.000')},
+      {y: 33, x: new Date('2019-08-11T00:00:00.000')},
+      {y: 71, x: new Date('2019-08-12T00:00:00.000')},
+      {y: 54, x: new Date('2019-08-13T00:00:00.000')},
+      {y: 81, x: new Date('2019-08-14T00:00:00.000')},
+      {y: 13, x: new Date('2019-08-15T00:00:00.000')},
+      {y: 77, x: new Date('2019-08-16T00:00:00.000')},
     ],
     name: 'www.toryburch1.com',
   }];

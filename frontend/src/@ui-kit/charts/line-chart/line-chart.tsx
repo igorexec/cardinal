@@ -1,31 +1,35 @@
 import React, {Component} from 'react';
 import * as d3 from 'd3';
 
-interface Score {
-  score: number;
-  date: Date;
+interface CoordData<T, U> {
+  x: T;
+  y: U;
 }
 
-interface Props {
+interface Props<T, U> {
   data: Array<{
     name: string;
-    data: Score[];
+    data: Array<CoordData<T, U>>;
   }>;
 }
 
-export class LineChart extends Component<Props> {
+export class LineChart<T extends d3.Numeric, U extends d3.Numeric> extends Component<Props<T, U>> {
   private el = React.createRef<SVGSVGElement>();
 
   componentDidMount(): void {
     const {data} = this.props;
 
-    const scores = data.reduce((acc, l) => {
+    const points = data.reduce((acc, l) => {
       return [...acc, ...l.data];
-    }, [] as Score[]);
-    const [minDate, maxDate] = d3.extent(scores, s => s.date) as [Date, Date];
-    const xScale = d3.scaleTime().domain([minDate, maxDate]).range([0, 1000]);
-    const yScale = d3.scaleLinear().domain([100, 0]).range([0, 300]);
+    }, [] as Array<CoordData<T, U>>);
+    const [minX, maxX] = d3.extent(points, p => p.x) as [T, T];
+    const [minY, maxY] = d3.extent(points, p => p.y).reverse() as [U, U];
+
+    const xScale = d3.scaleTime().domain([minX, maxX]).range([0, 1000]);
+    const yScale = d3.scaleLinear().domain([maxY, minY]).range([0, 300]);
+
     const dateFormat = d3.timeFormat('%Y-%m-%d') as () => string;
+
     const makeXLines = d3.axisBottom(xScale).tickFormat(dateFormat);
     const makeYLines = d3.axisLeft(yScale);
 
@@ -33,7 +37,7 @@ export class LineChart extends Component<Props> {
     d3.select(this.el.current).append('g').call(makeYLines);
 
     data.forEach(l => {
-      const line = d3.line<Score>().x(d => xScale(d.date)).y(d => yScale(d.score));
+      const line = d3.line<CoordData<T, U>>().x(d => xScale(d.x)).y(d => yScale(d.y));
       d3.select(this.el.current)
         .append('path')
         .datum(l.data)
