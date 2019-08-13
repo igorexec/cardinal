@@ -1,16 +1,9 @@
 import React, {Component} from 'react';
 import * as d3 from 'd3';
-
-interface CoordData<T, U> {
-  x: T;
-  y: U;
-}
+import {LineData, CoordData} from './types';
 
 interface Props<T, U> {
-  data: Array<{
-    name: string;
-    data: Array<CoordData<T, U>>;
-  }>;
+  data: Array<LineData<T, U>>;
 }
 
 export class LineChart<T extends d3.Numeric, U extends d3.Numeric> extends Component<Props<T, U>> {
@@ -23,7 +16,7 @@ export class LineChart<T extends d3.Numeric, U extends d3.Numeric> extends Compo
       return [...acc, ...l.data];
     }, [] as Array<CoordData<T, U>>);
     const [minX, maxX] = d3.extent(points, p => p.x) as [T, T];
-    const [minY, maxY] = d3.extent(points, p => p.y).reverse() as [U, U];
+    const [minY, maxY] = d3.extent(points, p => p.y) as [U, U];
 
     const xScale = d3.scaleTime().domain([minX, maxX]).range([0, 1000]);
     const yScale = d3.scaleLinear().domain([maxY, minY]).range([0, 300]);
