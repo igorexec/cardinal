@@ -12,6 +12,8 @@ import (
 )
 
 type Opts struct {
+	ServerCmd cmd.ServerCommand `command:"server"`
+
 	CardinalURL string `long:"url" env:"CARDINAL_URL" required:"true" description:"url to cardinal"`
 
 	Dbg bool `long:"dbg" env:"DEBUG" description:"debug mode"`
