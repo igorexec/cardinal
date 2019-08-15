@@ -43,6 +43,10 @@ func (s *ServerCommand) Execute(args []string) error {
 		return err
 	}
 
+	if err := app.run(ctx); err != nil {
+		lgr.Printf("[ERROR] cardinal terminated with error %+v", err)
+		return err
+	}
 	lgr.Printf("[INFO] cardinal terminated")
 	return nil
 }
