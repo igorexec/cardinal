@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-chi/chi"
+	"github.com/go-chi/render"
 	"github.com/go-pkgz/lgr"
 	"net/http"
 	"sync"
@@ -61,9 +62,20 @@ func (s *Rest) routes() chi.Router {
 
 	router.Route("/api/v1", func(rapi chi.Router) {
 		rapi.Group(func(ropen chi.Router) {
-
+			ropen.Get("/config", s.configCtrl)
 		})
 	})
 
 	return router
+}
+
+func (s *Rest) configCtrl(w http.ResponseWriter, r *http.Request) {
+	cnf := struct {
+		Version string `json:"version"`
+	}{
+		Version: s.Version,
+	}
+
+	render.Status(r, http.StatusOK)
+	render.JSON(w, r, cnf)
 }
