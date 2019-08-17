@@ -17,6 +17,8 @@ type Rest struct {
 
 	httpServer *http.Server
 	lock       sync.Mutex
+
+	pubRest public
 }
 
 func (s *Rest) Run(port int) {
@@ -63,6 +65,7 @@ func (s *Rest) routes() chi.Router {
 	router.Route("/api/v1", func(rapi chi.Router) {
 		rapi.Group(func(ropen chi.Router) {
 			ropen.Get("/config", s.configCtrl)
+			ropen.Post("/collect", s.pubRest.collectPageSpeedCtrl)
 		})
 	})
 
