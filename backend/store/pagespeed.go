@@ -1,6 +1,9 @@
 package store
 
+import "time"
+
 type PageSpeed struct {
-	Url   string `json:"url"`
-	Score int8   `json:"score"`
+	Page  string    `json:"page"`
+	Score int       `json:"score"`
+	Date  time.Time `json:"date"`
 }
