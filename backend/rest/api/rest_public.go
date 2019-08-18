@@ -7,17 +7,18 @@ import (
 	"github.com/icheliadinski/cardinal/rest"
 	"github.com/icheliadinski/cardinal/store"
 	"net/http"
+	"time"
 )
 
 type public struct {
-	//dataService pubStore
+	dataService        pubStore
 	pageSpeedCollector *collector.PageSpeed
 }
 
-//type pubStore interface {
-//	Save(site string, score int8) error
-//	FindSince(since time.Time, to time.Time, site string) ([]store.PageSpeed, error)
-//}
+type pubStore interface {
+	Create(pageSpeed store.PageSpeed) (pageSpeedID string, err error)
+	FindSince(since time.Time, to time.Time, site string) ([]store.PageSpeed, error)
+}
 
 func (s *public) collectPageSpeedCtrl(w http.ResponseWriter, r *http.Request) {
 	lgr.Printf("[INFO] pagespeed collector initiated")

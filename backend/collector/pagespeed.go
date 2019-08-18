@@ -13,28 +13,30 @@ import (
 type PageSpeed struct {
 }
 
-func (s *PageSpeed) Collect(page string) (store.PageSpeed, error) {
+func (s *PageSpeed) Collect(page string) (result store.PageSpeed, err error) {
 	lgr.Printf("[INFO] pagespeed collector started")
 
 	url := fmt.Sprintf("https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=%s", page)
 	resp, err := http.Get(url)
 	if err != nil {
 		lgr.Printf("[ERROR] failed to collect data from %s", url)
-		return store.PageSpeed{}, err
+		return result, err
 	}
 
 	score, err := s.mapBodyToScore(resp.Body)
 	if err != nil {
 		lgr.Printf("[INFO] can't map google API response to score")
-		return store.PageSpeed{}, err
+		return result, err
 	}
 
 	lgr.Printf("[INFO] pagespeed collector finished")
-	return store.PageSpeed{
+
+	result = store.PageSpeed{
 		Page:  page,
 		Score: int(score * 100),
 		Date:  time.Now().UTC(),
-	}, nil
+	}
+	return result, nil
 }
 
 func (s *PageSpeed) mapBodyToScore(body io.ReadCloser) (float32, error) {

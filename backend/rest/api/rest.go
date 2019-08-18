@@ -6,6 +6,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"github.com/go-pkgz/lgr"
+	"github.com/icheliadinski/cardinal/store/service"
 	"net/http"
 	"sync"
 	"time"
@@ -14,7 +15,9 @@ import (
 const hardBodyLimit = 1024 * 64 // limit size of body
 
 type Rest struct {
-	Version     string
+	Version string
+
+	DataServer  *service.DataStore
 	CardinalURL string
 
 	httpServer *http.Server
