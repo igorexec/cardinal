@@ -34,7 +34,8 @@ type MongoGroup struct {
 
 type serverApp struct {
 	*ServerCommand
-	restSrv *api.Rest
+	restSrv     *api.Rest
+	dataService *service.DataStore
 }
 
 func (s *ServerCommand) Execute(args []string) error {
@@ -75,11 +76,11 @@ func (s *ServerCommand) newServerApp() (*serverApp, error) {
 	}
 
 	dataService := &service.DataStore{
-		Interface: storeEngine,
+		Engine: storeEngine,
 	}
 
 	srv := &api.Rest{
-		DataServer:  dataService,
+		DataService: dataService,
 		Version:     s.Revision,
 		CardinalURL: s.CardinalURL,
 	}
@@ -87,6 +88,7 @@ func (s *ServerCommand) newServerApp() (*serverApp, error) {
 	return &serverApp{
 		ServerCommand: s,
 		restSrv:       srv,
+		dataService:   dataService,
 	}, nil
 }
 

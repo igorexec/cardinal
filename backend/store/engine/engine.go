@@ -6,5 +6,5 @@ type Interface interface {
 }
 
 type Accessor interface {
-	Create(pageSpeed store.PageSpeed) (pageSpeedID string, err error) // create new pagespeed data
+	Save(pageSpeed store.PageSpeed) error // create new pagespeed data
 }
