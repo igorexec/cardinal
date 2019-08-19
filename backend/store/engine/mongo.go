@@ -26,7 +26,7 @@ func NewMongo(conn *mongo.Connection, bufferSize int, flushDuration time.Duratio
 	return &result, errors.Wrap(err, "failed to prepare mongo")
 }
 
-func (m *Mongo) Create(pageSpeed store.PageSpeed) (pageSpeedID string, err error) {
+func (m *Mongo) Save(pageSpeed store.PageSpeed) (pageSpeedID string, err error) {
 	err = m.conn.WithCustomCollection(mongoPagespeeds, func(coll *mgo.Collection) error {
 		return coll.Insert(&pageSpeed)
 	})

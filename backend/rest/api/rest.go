@@ -17,7 +17,7 @@ const hardBodyLimit = 1024 * 64 // limit size of body
 type Rest struct {
 	Version string
 
-	DataServer  *service.DataStore
+	DataService *service.DataStore
 	CardinalURL string
 
 	httpServer *http.Server
@@ -67,6 +67,8 @@ func (s *Rest) routes() chi.Router {
 
 	// TODO: Add middlewares
 
+	s.pubRest = s.controllerGroups()
+
 	router.Route("/api/v1", func(rapi chi.Router) {
 		rapi.Group(func(ropen chi.Router) {
 
@@ -89,4 +91,11 @@ func (s *Rest) configCtrl(w http.ResponseWriter, r *http.Request) {
 
 	render.Status(r, http.StatusOK)
 	render.JSON(w, r, cnf)
+}
+
+func (s *Rest) controllerGroups() public {
+	pubGrp := public{
+		dataService: s.DataService,
+	}
+	return pubGrp
 }

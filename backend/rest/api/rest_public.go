@@ -7,7 +7,6 @@ import (
 	"github.com/icheliadinski/cardinal/rest"
 	"github.com/icheliadinski/cardinal/store"
 	"net/http"
-	"time"
 )
 
 type public struct {
@@ -16,8 +15,7 @@ type public struct {
 }
 
 type pubStore interface {
-	Create(pageSpeed store.PageSpeed) (pageSpeedID string, err error)
-	FindSince(since time.Time, to time.Time, site string) ([]store.PageSpeed, error)
+	Save(pageSpeed store.PageSpeed) error
 }
 
 func (s *public) collectPageSpeedCtrl(w http.ResponseWriter, r *http.Request) {
@@ -32,6 +30,11 @@ func (s *public) collectPageSpeedCtrl(w http.ResponseWriter, r *http.Request) {
 	res, err := s.pageSpeedCollector.Collect(pageSpeed.Page)
 	if err != nil {
 		rest.SendErrorJSON(w, r, http.StatusInternalServerError, err, "failed to collect", rest.ErrCollectFail)
+		return
+	}
+
+	if err := s.dataService.Save(res); err != nil {
+		rest.SendErrorJSON(w, r, http.StatusInternalServerError, err, "failed to save pagespeed data", rest.ErrSaveFail)
 		return
 	}
 
