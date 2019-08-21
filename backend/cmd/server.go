@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-pkgz/lgr"
 	"github.com/go-pkgz/mongo"
+	"github.com/icheliadinski/cardinal/collector"
 	"github.com/icheliadinski/cardinal/rest/api"
 	"github.com/icheliadinski/cardinal/store/engine"
 	"github.com/icheliadinski/cardinal/store/service"
@@ -36,6 +37,7 @@ type serverApp struct {
 	*ServerCommand
 	restSrv     *api.Rest
 	dataService *service.DataStore
+	collector   *collector.Collector
 }
 
 func (s *ServerCommand) Execute(args []string) error {
@@ -75,14 +77,20 @@ func (s *ServerCommand) newServerApp() (*serverApp, error) {
 		return nil, errors.Wrap(err, "failed to make data store engine")
 	}
 
+	collectorService, err := s.makeCollector()
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to make collector")
+	}
+
 	dataService := &service.DataStore{
 		Engine: storeEngine,
 	}
 
 	srv := &api.Rest{
-		DataService: dataService,
-		Version:     s.Revision,
-		CardinalURL: s.CardinalURL,
+		DataService:      dataService,
+		Version:          s.Revision,
+		CardinalURL:      s.CardinalURL,
+		CollectorService: collectorService,
 	}
 
 	return &serverApp{
@@ -126,4 +134,15 @@ func (s *ServerCommand) makeMongo() (result *mongo.Server, err error) {
 		return nil, errors.New("no mongo URL provided")
 	}
 	return mongo.NewServerWithURL(s.Mongo.URL, 10*time.Second)
+}
+
+func (s *ServerCommand) makeCollector() (*collector.Collector, error) {
+	pageSpeedAPI := collector.PageSpeedAPI{
+		URL:   "https://www.googleapis.com/pagespeedonline/v5/runPagespeed",
+		Token: "",
+	}
+
+	return &collector.Collector{
+		PageSpeedAPI: pageSpeedAPI,
+	}, nil
 }
