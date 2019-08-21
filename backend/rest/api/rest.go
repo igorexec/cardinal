@@ -6,6 +6,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 	"github.com/go-pkgz/lgr"
+	"github.com/icheliadinski/cardinal/collector"
 	"github.com/icheliadinski/cardinal/store/service"
 	"net/http"
 	"sync"
@@ -17,8 +18,9 @@ const hardBodyLimit = 1024 * 64 // limit size of body
 type Rest struct {
 	Version string
 
-	DataService *service.DataStore
-	CardinalURL string
+	DataService      *service.DataStore
+	CollectorService *collector.Collector
+	CardinalURL      string
 
 	httpServer *http.Server
 	lock       sync.Mutex
@@ -94,8 +96,10 @@ func (s *Rest) configCtrl(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Rest) controllerGroups() public {
+
 	pubGrp := public{
 		dataService: s.DataService,
+		collector:   s.CollectorService,
 	}
 	return pubGrp
 }

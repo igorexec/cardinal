@@ -10,8 +10,8 @@ import (
 )
 
 type public struct {
-	dataService        pubStore
-	pageSpeedCollector *collector.PageSpeed
+	dataService pubStore
+	collector   *collector.Collector
 }
 
 type pubStore interface {
@@ -27,7 +27,7 @@ func (s *public) collectPageSpeedCtrl(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res, err := s.pageSpeedCollector.Collect(pageSpeed.Page)
+	res, err := s.collector.CollectPageSpeed(pageSpeed.Page)
 	if err != nil {
 		rest.SendErrorJSON(w, r, http.StatusInternalServerError, err, "failed to collect", rest.ErrCollectFail)
 		return

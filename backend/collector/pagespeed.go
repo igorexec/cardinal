@@ -10,20 +10,26 @@ import (
 	"time"
 )
 
-type PageSpeed struct {
+type PageSpeedAPI struct {
+	URL   string
+	Token string
 }
 
-func (s *PageSpeed) Collect(page string) (result store.PageSpeed, err error) {
+type Collector struct {
+	PageSpeedAPI PageSpeedAPI
+}
+
+func (c *Collector) CollectPageSpeed(page string) (result store.PageSpeed, err error) {
 	lgr.Printf("[INFO] pagespeed collector started")
 
-	url := fmt.Sprintf("https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=%s", page)
+	url := fmt.Sprintf("%s?url=%s", c.PageSpeedAPI, page)
 	resp, err := http.Get(url)
 	if err != nil {
 		lgr.Printf("[ERROR] failed to collect data from %s", url)
 		return result, err
 	}
 
-	score, err := s.mapBodyToScore(resp.Body)
+	score, err := c.mapBodyToScore(resp.Body)
 	if err != nil {
 		lgr.Printf("[INFO] can't map google API response to score")
 		return result, err
@@ -39,7 +45,7 @@ func (s *PageSpeed) Collect(page string) (result store.PageSpeed, err error) {
 	return result, nil
 }
 
-func (s *PageSpeed) mapBodyToScore(body io.ReadCloser) (float32, error) {
+func (c *Collector) mapBodyToScore(body io.ReadCloser) (float32, error) {
 	apiData := struct {
 		LighthouseResult struct {
 			Categories struct {
