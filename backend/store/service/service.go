@@ -19,5 +19,8 @@ func (s *DataStore) Save(pageSpeed store.PageSpeed) error {
 }
 
 func (s *DataStore) preparePageSpeed(pageSpeed store.PageSpeed) (store.PageSpeed, error) {
+	if pageSpeed.Score == 0 {
+		return store.PageSpeed{}, errors.Errorf("page speed index is 0 for %s", pageSpeed.Page)
+	}
 	return pageSpeed, nil
 }
