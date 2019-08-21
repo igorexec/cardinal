@@ -20,7 +20,7 @@ type Collector struct {
 }
 
 func (c *Collector) CollectPageSpeed(page string) (result store.PageSpeed, err error) {
-	lgr.Printf("[INFO] pagespeed collector started")
+	lgr.Printf("[INFO] pagespeed collector started for %s", page)
 
 	url := fmt.Sprintf("%s?url=%s", c.PageSpeedAPI, page)
 	resp, err := http.Get(url)
@@ -31,11 +31,11 @@ func (c *Collector) CollectPageSpeed(page string) (result store.PageSpeed, err e
 
 	score, err := c.mapBodyToScore(resp.Body)
 	if err != nil {
-		lgr.Printf("[INFO] can't map google API response to score")
+		lgr.Printf("[ERROR] failed to decode pagespeed response")
 		return result, err
 	}
 
-	lgr.Printf("[INFO] pagespeed collector finished")
+	lgr.Printf("[INFO] pagespeed collector for %s finished", page)
 
 	result = store.PageSpeed{
 		Page:  page,
