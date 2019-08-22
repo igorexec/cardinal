@@ -78,6 +78,7 @@ func (s *Rest) routes() chi.Router {
 
 			ropen.Group(func(rps chi.Router) {
 				rps.Post("/pagespeed", s.pubRest.collectPageSpeedCtrl)
+				rps.Get("/pagespeed", s.pubRest.findPageSpeed)
 			})
 		})
 	})

@@ -2,6 +2,7 @@ package engine
 
 import (
 	"github.com/globalsign/mgo"
+	"github.com/globalsign/mgo/bson"
 	"github.com/go-pkgz/mongo"
 	"github.com/hashicorp/go-multierror"
 	"github.com/icheliadinski/cardinal/store"
@@ -30,6 +31,14 @@ func (m *Mongo) Save(pageSpeed store.PageSpeed) error {
 	return m.conn.WithCustomCollection(mongoPagespeeds, func(coll *mgo.Collection) error {
 		return coll.Insert(&pageSpeed)
 	})
+}
+
+func (m *Mongo) Get(from time.Time, to time.Time) (ps []store.PageSpeed, err error) {
+	err = m.conn.WithCustomCollection(mongoPagespeeds, func(coll *mgo.Collection) error {
+		query := bson.M{"date": bson.M{"$gt": from, "$lt": to}}
+		return coll.Find(query).All(&ps)
+	})
+	return ps, err
 }
 
 func (m *Mongo) prepare() error {

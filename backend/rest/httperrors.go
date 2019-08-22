@@ -14,6 +14,7 @@ const (
 	ErrPageValidation = 1
 	ErrCollectFail    = 2
 	ErrSaveFail       = 3
+	ErrNoData         = 4
 )
 
 func SendErrorJSON(w http.ResponseWriter, r *http.Request, code int, err error, details string, errCode int) {
