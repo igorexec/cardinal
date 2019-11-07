@@ -9,7 +9,7 @@ require (
 	github.com/go-chi/chi v4.0.2+incompatible
 	github.com/go-chi/cors v1.0.0
 	github.com/go-chi/render v1.0.1
-	github.com/go-pkgz/lgr v0.6.3
+	github.com/go-pkgz/lgr v0.7.0
 	github.com/go-pkgz/mongo v1.1.2
 	github.com/go-pkgz/rest v1.4.1
 	github.com/hashicorp/go-multierror v1.0.0

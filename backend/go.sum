@@ -17,6 +17,8 @@ github.com/go-chi/render v1.0.1/go.mod h1:pq4Rr7HbnsdaeHagklXub+p6Wd16Af5l9koip1
 github.com/go-pkgz/lgr v0.2.2/go.mod h1:hBM1NM/SoYdlrykgdgJWGrZ/TM/XaZIjRbJfx7NkMm8=
 github.com/go-pkgz/lgr v0.6.3 h1:n9pGk2paBV8w/Y/FVEq5MkwDmP33dnUPKbY4CyyygwM=
 github.com/go-pkgz/lgr v0.6.3/go.mod h1:hBM1NM/SoYdlrykgdgJWGrZ/TM/XaZIjRbJfx7NkMm8=
+github.com/go-pkgz/lgr v0.7.0 h1:S/AAPwt/RE9a5mNJskA7dGVp+Dq6SMIW6LYjG3ITxY8=
+github.com/go-pkgz/lgr v0.7.0/go.mod h1:yMgxU+GobMRJgIEbSzDKy/67W18S7qmGx/7BVL5AB8Q=
 github.com/go-pkgz/mongo v1.1.2 h1:2Vqn3CWQJkkx4gxxDiQUitAW2FN/CH26lKHkipmpKcc=
 github.com/go-pkgz/mongo v1.1.2/go.mod h1:0NkWnzpiUxoL5fYZuttCtJrpC67oNDidfYxcdPqHTf0=
 github.com/go-pkgz/rest v1.4.1 h1:DmaVLPH2O7yLehrWOW0uz01d2mVHz9fBR/iuTiPRzaw=
