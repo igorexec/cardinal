@@ -4,10 +4,6 @@ root = true
 insert_final_newline = true
 end_of_line = lf
 indent_style = space
-ij_typescript_use_double_quotes = false
 
-[*.{js,jsx,ts,tsx,html,css}]
+[*.{js,ts,jsx,tsx,html,css,json}]
 indent_size = 2
-
-[*.go]
-indent_size = 4

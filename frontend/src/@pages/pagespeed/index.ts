@@ -1,1 +1,0 @@
-export {PageSpeed} from './pagespeed';
