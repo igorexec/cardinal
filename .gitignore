@@ -1,4 +1,8 @@
+# Editors
+.vscode
 .idea
+
+# File System
 .DS_Store
 *.log
 *.exe
