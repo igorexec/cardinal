@@ -2,4 +2,7 @@ module github.com/igorexec/cardinal
 
 go 1.13
 
-require github.com/jessevdk/go-flags v1.4.0
+require (
+	github.com/jessevdk/go-flags v1.4.0
+	github.com/pkg/errors v0.8.1 // indirect
+)
