@@ -19,16 +19,26 @@ type serverApp struct {
 	*ServerCommand
 
 	restSrv *api.Rest
+
+	terminated chan struct{}
 }
 
 func (s *ServerCommand) Execute(args []string) error {
 	log.Printf("[info] start server on port %d", s.Port)
 
-	_, err := s.newServerApp()
+	ctx, _ := context.WithCancel(context.Background())
+
+	app, err := s.newServerApp()
 	if err != nil {
 		log.Printf("[panic] failed to setup application: %+v", err)
 		return err
 	}
+
+	if err := app.run(ctx); err != nil {
+		log.Printf("[error] cardinal terminated with error: %+v", err)
+		return err
+	}
+	log.Printf("[info] cardinal terminated")
 	return nil
 }
 
@@ -58,4 +68,18 @@ func (s *ServerCommand) newServerApp() (*serverApp, error) {
 
 func (a *serverApp) run(ctx context.Context) error {
 
+	go func() {
+		<-ctx.Done()
+		log.Printf("[info] shutdown initiated")
+	}()
+
+	a.activateBackup(ctx)
+
+	a.restSrv.Run(a.Port)
+	close(a.terminated)
+	return nil
+}
+
+func (a *serverApp) activateBackup(ctx context.Context) {
+	// todo: do backup
 }
