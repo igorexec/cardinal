@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"github.com/jessevdk/go-flags"
 	"log"
 	"os"
 	"os/signal"
@@ -9,10 +11,22 @@ import (
 )
 
 type Opts struct {
+	CardinalURL string `long:"url" env:"CARDINAL_URL" required:"true" description:"url to cardinal"`
 }
 
 func main() {
+	fmt.Printf("cardinal is starting")
 
+	var opts Opts
+	p := flags.NewParser(&opts, flags.Default)
+
+	if _, err := p.Parse(); err != nil {
+		if flagsErr, ok := err.(*flags.Error); ok && flagsErr.Type == flags.HelpFlag {
+			os.Exit(0)
+		} else {
+			os.Exit(1)
+		}
+	}
 }
 
 func init() {
@@ -21,7 +35,7 @@ func init() {
 
 	go func() {
 		for range sigChan {
-			log.Printf("[INFO] SIGQUIT detected, dump:\n%s", getDump())
+			log.Printf("[info] SIGQUIT detected, dump:\n%s", getDump())
 		}
 	}()
 
