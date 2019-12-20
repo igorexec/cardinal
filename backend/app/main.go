@@ -12,8 +12,8 @@ import (
 )
 
 type Opts struct {
-	ServerCmd   struct{} `command:"server"`
-	CardinalURL string   `long:"url" env:"CARDINAL_URL" required:"true" description:"url to cardinal"`
+	ServerCmd   cmd.ServerCmd `command:"server"`
+	CardinalURL string        `long:"url" env:"CARDINAL_URL" required:"true" description:"url to cardinal"`
 }
 
 func main() {
