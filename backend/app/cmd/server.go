@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"github.com/igorexec/cardinal/app/rest/api"
 	"github.com/pkg/errors"
 	"log"
@@ -39,5 +40,22 @@ func (s *ServerCommand) newServerApp() (*serverApp, error) {
 	if !strings.HasPrefix(s.CardinalURL, "http://") && !strings.HasPrefix(s.CardinalURL, "https://") {
 		return nil, errors.Errorf("invalid cardinal url: %s", s.CardinalURL)
 	}
-	return nil, nil
+
+	log.Printf("[info] root url=%s", s.CardinalURL)
+
+	// configuration for all services
+
+	srv := &api.Rest{
+		Version:     s.Revision,
+		CardinalURL: s.CardinalURL,
+	}
+
+	return &serverApp{
+		ServerCommand: s,
+		restSrv:       srv,
+	}, nil
+}
+
+func (a *serverApp) run(ctx context.Context) error {
+
 }
