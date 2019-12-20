@@ -19,13 +19,13 @@ type Opts struct {
 var revision = "unknown"
 
 func main() {
-	fmt.Printf("cardinal version %s", revision)
+	fmt.Printf("cardinal %s\n", revision)
 
 	var opts Opts
 	p := flags.NewParser(&opts, flags.Default)
 	p.CommandHandler = func(command flags.Commander, args []string) error {
 		c := command.(cmd.CommonOptionsCommander)
-		c.SetCommon(cmd.CommonOpts{CardinalURL: opts.CardinalURL})
+		c.SetCommon(cmd.CommonOpts{CardinalURL: opts.CardinalURL, Revision: revision})
 
 		err := c.Execute(args)
 		if err != nil {
