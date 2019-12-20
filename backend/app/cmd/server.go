@@ -72,6 +72,8 @@ func (a *serverApp) run(ctx context.Context) error {
 		<-ctx.Done()
 		log.Printf("[info] shutdown initiated")
 		a.restSrv.Shutdown()
+		// kill all the rest of services
+		log.Print("[info] shutdown completed")
 	}()
 
 	a.activateBackup(ctx)
