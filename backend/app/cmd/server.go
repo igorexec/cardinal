@@ -2,7 +2,9 @@ package cmd
 
 import (
 	"github.com/igorexec/cardinal/app/rest/api"
+	"github.com/pkg/errors"
 	"log"
+	"strings"
 )
 
 type ServerCommand struct {
@@ -32,6 +34,10 @@ func (s *ServerCommand) Execute(args []string) error {
 func (s *ServerCommand) newServerApp() (*serverApp, error) {
 	if err := makeDirs(s.BackupLocation); err != nil {
 		return nil, err
+	}
+
+	if !strings.HasPrefix(s.CardinalURL, "http://") && !strings.HasPrefix(s.CardinalURL, "https://") {
+		return nil, errors.Errorf("invalid cardinal url: %s", s.CardinalURL)
 	}
 	return nil, nil
 }
