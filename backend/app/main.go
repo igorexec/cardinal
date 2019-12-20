@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/igorexec/cardinal/app/cmd"
 	"github.com/jessevdk/go-flags"
 	"log"
 	"os"
@@ -11,14 +12,25 @@ import (
 )
 
 type Opts struct {
-	CardinalURL string `long:"url" env:"CARDINAL_URL" required:"true" description:"url to cardinal"`
+	ServerCmd   struct{} `command:"server"`
+	CardinalURL string   `long:"url" env:"CARDINAL_URL" required:"true" description:"url to cardinal"`
 }
 
 func main() {
-	fmt.Printf("cardinal is starting")
+	fmt.Printf("cardinal version 1")
 
 	var opts Opts
 	p := flags.NewParser(&opts, flags.Default)
+	p.CommandHandler = func(command flags.Commander, args []string) error {
+		c := command.(cmd.CommonOptionsCommander)
+		c.SetCommon(cmd.CommonOpts{CardinalURL: opts.CardinalURL})
+
+		err := c.Execute(args)
+		if err != nil {
+			log.Printf("[error] failed with %+v", err)
+		}
+		return err
+	}
 
 	if _, err := p.Parse(); err != nil {
 		if flagsErr, ok := err.(*flags.Error); ok && flagsErr.Type == flags.HelpFlag {
