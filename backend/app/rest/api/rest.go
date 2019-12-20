@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -36,4 +37,19 @@ func (s *Rest) makeHTTPServer(port int, router http.Handler) *http.Server {
 		ReadHeaderTimeout: 5 * time.Second,
 		IdleTimeout:       30 * time.Second,
 	}
+}
+
+func (s *Rest) Shutdown() {
+	log.Print("[warn] shutdown rest server")
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	s.lock.Lock()
+	if s.httpServer != nil {
+		if err := s.httpServer.Shutdown(ctx); err != nil {
+			log.Printf("[debug] http shutdown error: %s", err)
+		}
+		log.Print("[debug] shutdown http server completed")
+	}
+	s.lock.Unlock()
 }
