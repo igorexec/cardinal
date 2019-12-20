@@ -27,4 +27,5 @@ func makeDirs(dirs ...string) error {
 			return errors.Wrapf(err, "can't make directory %s", dir)
 		}
 	}
+	return nil
 }

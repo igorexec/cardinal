@@ -20,6 +20,12 @@ type serverApp struct {
 
 func (s *ServerCommand) Execute(args []string) error {
 	log.Printf("[info] start server on port %d", s.Port)
+
+	_, err := s.newServerApp()
+	if err != nil {
+		log.Printf("[panic] failed to setup application: %+v", err)
+		return err
+	}
 	return nil
 }
 
