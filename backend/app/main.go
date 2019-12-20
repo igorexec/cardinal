@@ -16,8 +16,10 @@ type Opts struct {
 	CardinalURL string        `long:"url" env:"CARDINAL_URL" required:"true" description:"url to cardinal"`
 }
 
+var revision = "unknown"
+
 func main() {
-	fmt.Printf("cardinal version 1")
+	fmt.Printf("cardinal version %s", revision)
 
 	var opts Opts
 	p := flags.NewParser(&opts, flags.Default)
