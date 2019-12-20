@@ -5,7 +5,10 @@ import (
 	"github.com/igorexec/cardinal/app/rest/api"
 	"github.com/pkg/errors"
 	"log"
+	"os"
+	"os/signal"
 	"strings"
+	"syscall"
 )
 
 type ServerCommand struct {
@@ -26,7 +29,14 @@ type serverApp struct {
 func (s *ServerCommand) Execute(args []string) error {
 	log.Printf("[info] start server on port %d", s.Port)
 
-	ctx, _ := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(context.Background())
+	go func() {
+		stop := make(chan os.Signal, 1)
+		signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
+		<-stop
+		log.Printf("[warn] interrupt signal")
+		cancel()
+	}()
 
 	app, err := s.newServerApp()
 	if err != nil {
@@ -63,6 +73,7 @@ func (s *ServerCommand) newServerApp() (*serverApp, error) {
 	return &serverApp{
 		ServerCommand: s,
 		restSrv:       srv,
+		terminated:    make(chan struct{}),
 	}, nil
 }
 
