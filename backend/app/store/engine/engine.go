@@ -5,7 +5,10 @@ import (
 	"time"
 )
 
+const database = "cardinal"
+
 type Interface interface {
 	Create(pageSpeed store.PageSpeed) (pageSpeedID string, err error)
 	Get(from time.Time, to time.Time) ([]store.PageSpeed, error)
+	Close() error
 }
