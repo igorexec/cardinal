@@ -3,6 +3,7 @@ package engine
 import (
 	"context"
 	"github.com/igorexec/cardinal/app/store"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -23,7 +24,7 @@ func NewMongo(uri string) *Mongo {
 	ctx := context.Background()
 	db, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
 	if err != nil {
-		log.Fatalf("Failed to connect to database: %v", err)
+		log.Fatalf("[error] failed to connect to database: %v", err)
 	}
 	return &Mongo{
 		db: db.Database(database),
@@ -31,8 +32,8 @@ func NewMongo(uri string) *Mongo {
 }
 
 func (m *Mongo) Create(ctx context.Context, pageSpeed store.PageSpeed) (pageSpeedID string, err error) {
-	collection := m.db.Collection(mongoPageSpeed)
-	result, err := collection.InsertOne(ctx, pageSpeed)
+	c := m.db.Collection(mongoPageSpeed)
+	result, err := c.InsertOne(ctx, pageSpeed)
 	if err != nil {
 		log.Printf("[error] failed to pagespeed insert to DB: %v", err)
 		return "", err
@@ -42,8 +43,29 @@ func (m *Mongo) Create(ctx context.Context, pageSpeed store.PageSpeed) (pageSpee
 	return oid.Hex(), nil
 }
 
-func (m *Mongo) Get(ctx context.Context, from time.Time, to time.Time) ([]store.PageSpeed, error) {
-	return nil, nil
+func (m *Mongo) Get(ctx context.Context, from time.Time, to time.Time) (ps []store.PageSpeed, err error) {
+	c := m.db.Collection(mongoPageSpeed)
+	cur, err := c.Find(ctx, bson.M{"$gt": from, "$lt": to})
+	if err != nil {
+		log.Printf("[warn] pagespeed from %s to %s not found", from.String(), to.String())
+		return nil, err
+	}
+
+	for cur.Next(ctx) {
+		var elem store.PageSpeed
+		if err := cur.Decode(&elem); err != nil {
+			log.Fatalf("[error] failed to decode: %v", err)
+		}
+
+		ps = append(ps, elem)
+	}
+	if err := cur.Err(); err != nil {
+		log.Fatalf("[error] failed to iterate: %v", err)
+	}
+	if err := cur.Close(ctx); err != nil {
+		log.Fatalf("[error] failed to close cursor: %v", err)
+	}
+	return ps, nil
 }
 
 func (m *Mongo) Close(ctx context.Context) error {
