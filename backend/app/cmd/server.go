@@ -63,7 +63,7 @@ func (s *ServerCommand) newServerApp() (*serverApp, error) {
 
 	log.Printf("[info] root url=%s", s.CardinalURL)
 
-	// configuration for all services
+	// todo: add configuration for all services
 
 	srv := &api.Rest{
 		Version:     s.Revision,
