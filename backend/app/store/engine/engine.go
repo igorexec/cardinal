@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"context"
 	"github.com/igorexec/cardinal/app/store"
 	"time"
 )
@@ -8,7 +9,7 @@ import (
 const database = "cardinal"
 
 type Interface interface {
-	Create(pageSpeed store.PageSpeed) (pageSpeedID string, err error)
-	Get(from time.Time, to time.Time) ([]store.PageSpeed, error)
-	Close() error
+	Create(context.Context, store.PageSpeed) (pageSpeedID string, err error)
+	Get(ctx context.Context, from time.Time, to time.Time) ([]store.PageSpeed, error)
+	Close(context.Context) error
 }
