@@ -20,25 +20,25 @@ func NewPageSpeedCollector(token string) *PageSpeedCollector {
 	return &PageSpeedCollector{Token: token}
 }
 
-func (c *PageSpeedCollector) Do(page string) (*store.PageSpeed, error) {
+func (c *PageSpeedCollector) Do(page string) (result store.PageSpeed, err error) {
 	log.Printf("[info] pagespeed collector started for %s", page)
 
 	url := fmt.Sprintf("%s?url=%s&key=%s", googlePageSpeedAPI, page, c.Token)
 	resp, err := http.Get(url)
 	if err != nil {
 		log.Printf("[error] failed to collect data for %s: %v", page, err)
-		return nil, err
+		return result, err
 	}
 
 	score, err := parsePageSpeed(resp.Body)
 	if err != nil {
 		log.Fatalf("[error] failed to decode: %v", err)
-		return nil, err
+		return result, err
 	}
 
 	log.Printf("[info] pagespeed collector for %s finished", page)
 
-	return &store.PageSpeed{
+	return store.PageSpeed{
 		Score: int(score * 100),
 		Page:  page,
 		Date:  time.Now().UTC(),

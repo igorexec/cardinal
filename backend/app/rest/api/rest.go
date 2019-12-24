@@ -24,6 +24,8 @@ type Rest struct {
 	pubRest public
 }
 
+const hardBodyLimit = 1024 * 64 // limit size of body
+
 func (s *Rest) Run(port int) {
 	// todo: add switch statement according to SSL config. HTTP or HTTPS
 	log.Printf("[info] activate http server on port: %d", port)
