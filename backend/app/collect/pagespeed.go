@@ -24,6 +24,8 @@ func (c *PageSpeedCollector) Do(page string) (result store.PageSpeed, err error)
 	log.Printf("[info] pagespeed collector started for %s", page)
 
 	url := fmt.Sprintf("%s?url=%s&key=%s", googlePageSpeedAPI, page, c.Token)
+	log.Printf("[info] making request to %s", url)
+
 	resp, err := http.Get(url)
 	if err != nil {
 		log.Printf("[error] failed to collect data for %s: %v", page, err)
@@ -45,12 +47,12 @@ func (c *PageSpeedCollector) Do(page string) (result store.PageSpeed, err error)
 	}, nil
 }
 
-func parsePageSpeed(body io.ReadCloser) (float32, error) {
+func parsePageSpeed(body io.ReadCloser) (float64, error) {
 	apiData := struct {
 		LighthouseResult struct {
 			Categories struct {
 				Performance struct {
-					Score float32 `json:"score"`
+					Score float64 `json:"score"`
 				} `json:"performance"`
 			} `json:"categories"`
 		} `json:"lighthouseResult"`

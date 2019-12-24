@@ -40,8 +40,13 @@ func (s *private) collectCtrl(w http.ResponseWriter, r *http.Request) {
 		rest.SendErrorJSON(w, r, http.StatusInternalServerError, err, "failed to save pagespeed data", rest.ErrSaveFail)
 	}
 
-	pageSpeed.ID = id
+	result := &store.PageSpeed{
+		ID:    id,
+		Score: res.Score,
+		Page:  res.Page,
+		Date:  res.Date,
+	}
 
 	render.Status(r, http.StatusOK)
-	render.JSON(w, r, pageSpeed)
+	render.JSON(w, r, result)
 }

@@ -34,8 +34,6 @@ type serverApp struct {
 	restSrv     *api.Rest
 	dataService *service.DataStore
 
-	pageSpeedCollector *collect.PageSpeedCollector
-
 	terminated chan struct{}
 }
 
@@ -85,20 +83,20 @@ func (s *ServerCommand) newServerApp() (*serverApp, error) {
 
 	dataService := &service.DataStore{Engine: storeEngine}
 
+	psc := collect.NewPageSpeedCollector("")
+
 	srv := &api.Rest{
-		DataService: dataService,
-		Version:     s.Revision,
-		CardinalURL: s.CardinalURL,
+		DataService:        dataService,
+		Version:            s.Revision,
+		CardinalURL:        s.CardinalURL,
+		PageSpeedCollector: psc,
 	}
 
-	psc := &collect.PageSpeedCollector{Token: ""}
-
 	return &serverApp{
-		ServerCommand:      s,
-		restSrv:            srv,
-		pageSpeedCollector: psc,
-		dataService:        dataService,
-		terminated:         make(chan struct{}),
+		ServerCommand: s,
+		restSrv:       srv,
+		dataService:   dataService,
+		terminated:    make(chan struct{}),
 	}, nil
 }
 

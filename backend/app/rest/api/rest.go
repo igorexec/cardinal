@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
+	"github.com/igorexec/cardinal/app/collect"
 	"github.com/igorexec/cardinal/app/store/engine/service"
 	"log"
 	"net/http"
@@ -18,10 +19,13 @@ type Rest struct {
 	DataService *service.DataStore
 	CardinalURL string
 
+	PageSpeedCollector *collect.PageSpeedCollector
+
 	httpServer *http.Server
 	lock       sync.Mutex
 
-	pubRest public
+	pubRest  public
+	privRest private
 }
 
 const hardBodyLimit = 1024 * 64 // limit size of body
@@ -67,7 +71,7 @@ func (s *Rest) routes() chi.Router {
 
 	// todo: add middlewares
 
-	s.pubRest = s.controllerGroups()
+	s.pubRest, s.privRest = s.controllerGroups()
 
 	router.Route("/api/v1", func(rapi chi.Router) {
 		rapi.Group(func(ropen chi.Router) {
@@ -75,6 +79,7 @@ func (s *Rest) routes() chi.Router {
 
 			ropen.Group(func(rps chi.Router) {
 				rps.Get("/pagespeed", s.pubRest.findPageSpeed)
+				rps.Post("/pagespeed", s.privRest.collectCtrl)
 			})
 		})
 	})
@@ -90,6 +95,9 @@ func (s *Rest) configCtrl(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, cnf)
 }
 
-func (s *Rest) controllerGroups() public {
-	return public{dataService: s.DataService}
+func (s *Rest) controllerGroups() (public, private) {
+	pubGrp := public{dataService: s.DataService}
+	privGrp := private{dataService: s.DataService, pageSpeedCollector: s.PageSpeedCollector}
+
+	return pubGrp, privGrp
 }
