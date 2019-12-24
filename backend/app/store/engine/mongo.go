@@ -20,15 +20,15 @@ type Mongo struct {
 	db     *mongo.Database
 }
 
-func NewMongo(uri string) *Mongo {
+func NewMongo(uri string) (*Mongo, error) {
 	ctx := context.Background()
 	db, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
 	if err != nil {
-		log.Fatalf("[error] failed to connect to database: %v", err)
+		return nil, err
 	}
 	return &Mongo{
 		db: db.Database(database),
-	}
+	}, nil
 }
 
 func (m *Mongo) Create(ctx context.Context, pageSpeed store.PageSpeed) (pageSpeedID string, err error) {

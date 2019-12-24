@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"fmt"
+	"github.com/igorexec/cardinal/app/store/engine/service"
 	"log"
 	"net/http"
 	"sync"
@@ -12,6 +13,7 @@ import (
 type Rest struct {
 	Version string
 
+	DataService *service.DataStore
 	CardinalURL string
 
 	httpServer *http.Server
@@ -30,15 +32,6 @@ func (s *Rest) Run(port int) {
 	log.Printf("[warn] http server terminated: %s", err)
 }
 
-func (s *Rest) makeHTTPServer(port int, router http.Handler) *http.Server {
-	return &http.Server{
-		Addr:              fmt.Sprintf(":%d", port),
-		Handler:           router,
-		ReadHeaderTimeout: 5 * time.Second,
-		IdleTimeout:       30 * time.Second,
-	}
-}
-
 func (s *Rest) Shutdown() {
 	log.Print("[warn] shutdown rest server")
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
@@ -52,4 +45,13 @@ func (s *Rest) Shutdown() {
 		log.Print("[debug] shutdown http server completed")
 	}
 	s.lock.Unlock()
+}
+
+func (s *Rest) makeHTTPServer(port int, router http.Handler) *http.Server {
+	return &http.Server{
+		Addr:              fmt.Sprintf(":%d", port),
+		Handler:           router,
+		ReadHeaderTimeout: 5 * time.Second,
+		IdleTimeout:       30 * time.Second,
+	}
 }

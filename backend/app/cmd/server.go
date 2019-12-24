@@ -2,7 +2,11 @@ package cmd
 
 import (
 	"context"
+	"github.com/igorexec/cardinal/app/collect"
 	"github.com/igorexec/cardinal/app/rest/api"
+	"github.com/igorexec/cardinal/app/store"
+	"github.com/igorexec/cardinal/app/store/engine"
+	"github.com/igorexec/cardinal/app/store/engine/service"
 	"github.com/pkg/errors"
 	"log"
 	"os"
@@ -12,16 +16,25 @@ import (
 )
 
 type ServerCommand struct {
+	Store StoreGroup `group:"store" namespace:"store" env-namespace:"STORE"`
+
 	Port           int    `long:"port" env:"CARDINAL_PORT" default:"8080" description:"cardinal server port"`
 	BackupLocation string `long:"backup" env:"BACKUP_PATH" default:"./var/backup" description:"backups location"`
 
 	CommonOpts
 }
 
+type StoreGroup struct {
+	Type string `long:"type" env:"TYPE" description:"type of storage" choice:"mongo" default:"mongo"`
+}
+
 type serverApp struct {
 	*ServerCommand
 
-	restSrv *api.Rest
+	restSrv     *api.Rest
+	dataService *service.DataStore
+
+	pageSpeedCollector *collect.PageSpeedCollector
 
 	terminated chan struct{}
 }
@@ -65,16 +78,44 @@ func (s *ServerCommand) newServerApp() (*serverApp, error) {
 
 	// todo: add configuration for all services
 
+	storeEngine, err := s.makeDataStore()
+	if err != nil {
+		return nil, err
+	}
+
+	dataService := &service.DataStore{Engine: storeEngine}
+
 	srv := &api.Rest{
+		DataService: dataService,
 		Version:     s.Revision,
 		CardinalURL: s.CardinalURL,
 	}
 
+	psc := &collect.PageSpeedCollector{Token: ""}
+
 	return &serverApp{
-		ServerCommand: s,
-		restSrv:       srv,
-		terminated:    make(chan struct{}),
+		ServerCommand:      s,
+		restSrv:            srv,
+		pageSpeedCollector: psc,
+		dataService:        dataService,
+		terminated:         make(chan struct{}),
 	}, nil
+}
+
+func (s *ServerCommand) makeDataStore() (eng engine.Interface, err error) {
+	log.Printf("[info] make data store, type=")
+
+	switch s.Store.Type {
+	case store.MONGO:
+		eng, err = engine.NewMongo("mongodb://localhost:27017")
+		if err != nil {
+			log.Fatalf("[error] failed to connect to database: %v", err)
+			return nil, err
+		}
+		return eng, nil
+	default:
+		return nil, errors.Errorf("[error] unsupported store type %s", s.Store.Type)
+	}
 }
 
 func (a *serverApp) run(ctx context.Context) error {
