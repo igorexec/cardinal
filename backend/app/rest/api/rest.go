@@ -3,6 +3,8 @@ package api
 import (
 	"context"
 	"fmt"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/render"
 	"github.com/igorexec/cardinal/app/store/engine/service"
 	"log"
 	"net/http"
@@ -18,6 +20,8 @@ type Rest struct {
 
 	httpServer *http.Server
 	lock       sync.Mutex
+
+	pubRest public
 }
 
 func (s *Rest) Run(port int) {
@@ -54,4 +58,35 @@ func (s *Rest) makeHTTPServer(port int, router http.Handler) *http.Server {
 		ReadHeaderTimeout: 5 * time.Second,
 		IdleTimeout:       30 * time.Second,
 	}
+}
+
+func (s *Rest) routes() chi.Router {
+	router := chi.NewRouter()
+
+	// todo: add middlewares
+
+	s.pubRest = s.controllerGroups()
+
+	router.Route("/api/v1", func(rapi chi.Router) {
+		rapi.Group(func(ropen chi.Router) {
+			ropen.Get("/config", s.configCtrl)
+
+			ropen.Group(func(rps chi.Router) {
+				rps.Get("/pagespeed", s.pubRest.findPageSpeed)
+			})
+		})
+	})
+}
+
+func (s *Rest) configCtrl(w http.ResponseWriter, r *http.Request) {
+	cnf := struct {
+		Version string
+	}{Version: s.Version}
+
+	render.Status(r, http.StatusOK)
+	render.JSON(w, r, cnf)
+}
+
+func (s *Rest) controllerGroups() public {
+	return public{dataService: s.DataService}
 }
