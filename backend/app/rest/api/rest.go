@@ -29,7 +29,7 @@ func (s *Rest) Run(port int) {
 	log.Printf("[info] activate http server on port: %d", port)
 
 	s.lock.Lock()
-	s.httpServer = s.makeHTTPServer(port, nil)
+	s.httpServer = s.makeHTTPServer(port, s.routes())
 	s.lock.Unlock()
 
 	err := s.httpServer.ListenAndServe()
@@ -76,6 +76,7 @@ func (s *Rest) routes() chi.Router {
 			})
 		})
 	})
+	return router
 }
 
 func (s *Rest) configCtrl(w http.ResponseWriter, r *http.Request) {
