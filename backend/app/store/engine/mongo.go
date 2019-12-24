@@ -43,9 +43,9 @@ func (m *Mongo) Create(ctx context.Context, pageSpeed store.PageSpeed) (pageSpee
 	return oid.Hex(), nil
 }
 
-func (m *Mongo) Get(ctx context.Context, from time.Time, to time.Time) (ps []store.PageSpeed, err error) {
+func (m *Mongo) Get(ctx context.Context, page string, from time.Time, to time.Time) (ps []store.PageSpeed, err error) {
 	c := m.db.Collection(mongoPageSpeed)
-	cur, err := c.Find(ctx, bson.M{"$gt": from, "$lt": to})
+	cur, err := c.Find(ctx, bson.M{"$gt": from, "$lt": to, "page": page})
 	if err != nil {
 		log.Printf("[warn] pagespeed from %s to %s not found", from.String(), to.String())
 		return nil, err
