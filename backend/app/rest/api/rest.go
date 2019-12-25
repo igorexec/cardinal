@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-chi/chi"
+	"github.com/go-chi/cors"
 	"github.com/go-chi/render"
 	"github.com/igorexec/cardinal/app/collect"
 	"github.com/igorexec/cardinal/app/store/engine/service"
@@ -72,6 +73,16 @@ func (s *Rest) routes() chi.Router {
 	// todo: add middlewares
 
 	s.pubRest, s.privRest = s.controllerGroups()
+
+	corsMiddleware := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-XSRF-Token", "X-JWT"},
+		ExposedHeaders:   []string{"Authorization"},
+		AllowCredentials: true,
+		MaxAge:           300,
+	})
+	router.Use(corsMiddleware.Handler)
 
 	router.Route("/api/v1", func(rapi chi.Router) {
 		rapi.Group(func(ropen chi.Router) {
