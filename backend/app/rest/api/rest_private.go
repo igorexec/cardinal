@@ -50,3 +50,9 @@ func (s *private) collectCtrl(w http.ResponseWriter, r *http.Request) {
 	render.Status(r, http.StatusOK)
 	render.JSON(w, r, result)
 }
+
+func (s *private) addPage(w http.ResponseWriter, r *http.Request) {
+	log.Printf("[info] adding page for collector initiated")
+
+	// todo: add logic for page add
+}
